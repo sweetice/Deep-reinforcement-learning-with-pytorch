@@ -1,3 +1,5 @@
+# Nota that this network won't work because the reward is always 1
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
