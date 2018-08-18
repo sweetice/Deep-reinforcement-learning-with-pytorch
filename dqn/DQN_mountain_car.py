@@ -6,13 +6,13 @@ from torch import optim
 import matplotlib.pyplot as plt
 import gym
 
-#hyper parameters
 
+#hyper parameters
 EPSILON = 0.9
 GAMMA = 0.9
 LR = 0.01
-MEMORY_CAPACITY = 200
-Q_NETWORK_ITERATION = 50
+MEMORY_CAPACITY = 2000
+Q_NETWORK_ITERATION = 100
 BATCH_SIZE = 32
 
 EPISODES = 400
@@ -26,18 +26,16 @@ class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
 
-        self.fc1 = nn.Linear(NUM_STATES, 50)
+        self.fc1 = nn.Linear(NUM_STATES, 30)
         self.fc1.weight.data.normal_(0, 0.1)
-        self.fc2 = nn.Linear(50, 30)
+        self.fc2 = nn.Linear(30, NUM_ACTIONS)
         self.fc2.weight.data.normal_(0, 0.1)
-        self.out = nn.Linear(30, NUM_STATES)
+
 
     def forward(self, x):
         x = self.fc1(x)
         x = F.relu(x)
         x = self.fc2(x)
-        x = F.relu(x)
-        x = self.out(x)
 
         return x
 
@@ -51,7 +49,11 @@ class Dqn():
         self.optimizer = optim.Adam(self.eval_net.parameters(), LR)
         self.loss = nn.MSELoss()
 
+        self.fig, self.ax = plt.subplots()
+
     def store_trans(self, state, action, reward, next_state):
+        if self.memory_counter % 500 ==0:
+            print("The experience pool collects {} time experience".format(self.memory_counter))
         index = self.memory_counter % MEMORY_CAPACITY
         trans = np.hstack((state, [action], [reward], next_state))
         self.memory[index,] = trans
@@ -67,8 +69,14 @@ class Dqn():
             action = action[0] #get the action index
         else:
             action = np.random.randint(0,NUM_ACTIONS)
-
         return action
+
+    def plot(self, ax, x):
+        ax.cla()
+        ax.set_xlabel("episode")
+        ax.set_ylabel("total reward")
+        ax.plot(x, 'b-')
+        plt.pause(0.000000000000001)
 
     def learn(self):
         # learn 100 times then the target network update
@@ -94,21 +102,29 @@ class Dqn():
         self.optimizer.step()
 
 
+
 def main():
     net = Dqn()
+    print("The DQN is collecting experience...")
+    step_counter_list = []
     for episode in range(EPISODES):
         state = env.reset()
+        step_counter = 0
         while True:
+            step_counter +=1
             env.render()
             action = net.choose_action(state)
             next_state, reward, done, info = env.step(action)
+            reward = reward * 100 if reward >0 else reward * 5
             net.store_trans(state, action, reward, next_state)
 
             if net.memory_counter >= MEMORY_CAPACITY:
                 net.learn()
                 if done:
-                    print("episode {}, the reward is {}", episode, round(reward), 3)
+                    print("episode {}, the reward is {}".format(episode, round(reward, 3)))
             if done:
+                step_counter_list.append(step_counter)
+                net.plot(net.ax, step_counter_list)
                 break
 
             state = next_state
