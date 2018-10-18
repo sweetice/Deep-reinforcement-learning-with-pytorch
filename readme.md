@@ -3,6 +3,8 @@
 
 ## DQN
 
+包含两个算法
+
 ## Policy Gradient
 
 使用下面的命令可以运行已经保存好的模型
@@ -30,3 +32,7 @@ pytorch_MountainCar-v0.py
 
 我将在兵棋游戏中复现alphago zero
 欢迎关注中科院自动化所智能系统与工程中心
+
+## Actor-Critic
+
+## 
