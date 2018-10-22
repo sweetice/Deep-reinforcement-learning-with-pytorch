@@ -31,6 +31,7 @@ pytorch_MountainCar-v0.py
 ## Alphago zero 
 
 我将在兵棋游戏中复现alphago zero
+
 欢迎关注中科院自动化所智能系统与工程中心
 
 ## Actor-Critic
