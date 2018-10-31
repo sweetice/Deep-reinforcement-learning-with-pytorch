@@ -1,5 +1,6 @@
-这是一个学习强化学习产生的代码
-我实现DQN，PG等算法
+This repository will implement the classic deep reinforcement learning algorithms. The aim of this repository is to provide clear code for people to learn the deep reinforcement learning algorithm. 
+
+In the future, more algorithms will be added and the existing codes will also be maintained.
 
 ## DQN
 
