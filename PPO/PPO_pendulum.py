@@ -83,7 +83,7 @@ class Agent():
         dist = Normal(mu, sigma)
         action = dist.sample()
         action_log_prob = dist.log_prob(action)
-        action.clamp(-2.0, 2.0)
+        action = action.clamp(-2.0, 2.0)
         return action.item(), action_log_prob.item()
 
     def get_value(self, state):
