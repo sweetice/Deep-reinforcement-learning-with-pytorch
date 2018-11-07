@@ -4,7 +4,11 @@ In the future, more algorithms will be added and the existing codes will also be
 
 ## DQN
 
-包含两个算法
+包含两个实现, SARSA实现和Q-learning实现。
+
+SARSA是on-policy实现，因为没有历史经验。
+
+Q-learning是off-policy实现，因为使用了历史经验。
 
 ## Policy Gradient
 
@@ -37,4 +41,11 @@ pytorch_MountainCar-v0.py
 
 ## Actor-Critic
 
+这是一个算法框架，Actor-Critic下面存放的是经典的REINFORCE 方法。
 ## 
+
+## TO DO
+- DDPG
+- ACER
+- A2C
+- DPPO
