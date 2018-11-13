@@ -63,6 +63,10 @@ Proximal-Policy-Optimization
 ## Alphago zero 
 
 我将在兵棋游戏中复现alphago zero
+### Timeline
+- 2018/11/01 给出Resnet15Dense1 版本，该版本收敛性不好，但胜率能够达到85%.只能够找点适用
+- 2018/11/12 给出Resnet12Dense3 版本，该版本第一次出现收敛、稳定趋势，胜率达到92%
+- 2018/11/13 给出Resnet12Dense3-v2版本， 该版本收敛性非常稳定，胜率逐步上升。性能待观测
 
 欢迎关注中科院自动化所智能系统与工程中心
 
