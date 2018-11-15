@@ -28,6 +28,7 @@ SARSA是on-policy实现，因为没有历史经验。
 
 Q-learning是off-policy实现，因为使用了历史经验。
 
+
 ## Policy Gradient
 
 使用下面的命令可以运行已经保存好的模型
@@ -60,6 +61,16 @@ pytorch_MountainCar-v0.py
 
 Proximal-Policy-Optimization
 
+## A2C
+
+Advantage Policy Gradient，2017年有一篇文章指出，A2C和A3C性能差异并不明显。
+
+## A3C
+
+## DDPG
+
+## TRPO
+
 ## Alphago zero 
 
 我将在兵棋游戏中复现alphago zero
@@ -86,5 +97,5 @@ Proximal-Policy-Optimization
 ## TO DO
 - DDPG
 - ACER
-- A2C
+- TRPO
 - DPPO
