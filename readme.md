@@ -73,13 +73,14 @@ Advantage Policy Gradient，2017年有一篇文章指出，A2C和A3C性能差异
 
 ## Alphago zero 
 
-我将在兵棋游戏中复现alphago zero
+我将在兵棋游戏中复现Alphago zero
 ### Timeline
 - 2018/11/01 给出Resnet15Dense1 版本，该版本收敛性不好，但胜率能够达到85%.只能够找点适用
 - 2018/11/12 给出Resnet12Dense3 版本，该版本第一次出现收敛、稳定趋势，胜率达到92%
 - 2018/11/13 给出Resnet12Dense3-v2版本， 该版本收敛性非常稳定，胜率逐步上升。性能待观测
+- 2018/11/15 经过3天的训练，给出Wargame AI —— 勾陈版本，勾陈胜率稳定在90%以上。
 
-欢迎关注中科院自动化所智能系统与工程中心
+勾陈由 8组神经网络构成。
 
 ## Papers Related to the Deep Reinforcement Learning
 [1] [A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/abs/1708.05866)  
