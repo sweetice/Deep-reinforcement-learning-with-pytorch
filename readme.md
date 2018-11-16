@@ -22,16 +22,20 @@ pip install -e .
 
 ## DQN
 
-包含两个实现, SARSA实现和Q-learning实现。
+Here I uploaded two DQN models, training Cartpole and mountaincar.
 
-SARSA是on-policy实现，因为没有历史经验。
+### Tips for MountainCar-v0
 
-Q-learning是off-policy实现，因为使用了历史经验。
+This is very sparse for MountainCar-v0, it is 0 at the beginning, only when the top of the mountain is 1, there is a reward. This leads to the fact that if the sample to the top of the mountain is not taken during training, basically the train will not come out. So you can change the reward, for example, to change to the current position of the Car is positively related. Of course, there is a more advanced approach to inverse reinforcement learning (using GAN).
+
+![value_loss](DQN/pic/value_loss.jpg)   
+![step](DQN/pic/finish_episode.jpg) 
+This is value loss for DQN, We can see that the loss increaded to 1e13 however, the network work well. This is because the training is going on, the target_net and act_net are very different, so the calculated loss becomes very large. The previous loss was small because the reward was very sparse, resulting in a small update of the two networks.
 
 
 ## Policy Gradient
 
-使用下面的命令可以运行已经保存好的模型
+Use the following command to run a saved model
 
 
 ```
@@ -39,7 +43,7 @@ python Run_Model.py
 ```
 
 
-使用下面的命令开始训练
+Use the following command to train model
 
 
 ```
@@ -50,12 +54,12 @@ pytorch_MountainCar-v0.py
 
 > policyNet.pkl
 
-这个是已经保存好的模型
+This is a model that I have trained.
 
 
 ## Actor-Critic
 
-这是一个算法框架，Actor-Critic下面存放的是经典的REINFORCE 方法。
+This is an algorithmic framework, and the classic REINFORCE method is stored under Actor-Critic.
 
 ## PPO
 
@@ -63,24 +67,31 @@ Proximal-Policy-Optimization
 
 ## A2C
 
-Advantage Policy Gradient，2017年有一篇文章指出，A2C和A3C性能差异并不明显。
+Advantage Policy Gradient, an paper in 2017 pointed out that the difference in performance between A2C and A3C is not obvious.
 
 ## A3C
 
-## DDPG
-
-## TRPO
+A common reproduction 
 
 ## Alphago zero 
 
-我将在兵棋游戏中复现Alphago zero
+I will reproduce AlphagoZero in wargame.
+
 ### Timeline
+
+- 2018/11/01 gives the Resnet15Dense1 version, which has poor convergence, but the winning rate can reach 85%.
+- 2018/11/12 Gives the Resnet12Dense3 version, which is the first convergence and stable trend, with a winning percentage of 92%.
+- 2018/11/13 The Resnet12Dense3-v2 version is given. This version is very stable and the winning rate is gradually increasing. Performance to be observed
+- 2018/11/15 After 3 days of training, Wargame AI is given - the version of Gou Chen, the hit rate is stable at over 90%.
+- 2018/11/16 The rate of Chen Chen wins 96%.
+
+
 - 2018/11/01 给出Resnet15Dense1 版本，该版本收敛性不好，但胜率能够达到85%.只能够找点适用
 - 2018/11/12 给出Resnet12Dense3 版本，该版本第一次出现收敛、稳定趋势，胜率达到92%
 - 2018/11/13 给出Resnet12Dense3-v2版本， 该版本收敛性非常稳定，胜率逐步上升。性能待观测
 - 2018/11/15 经过3天的训练，给出Wargame AI —— 勾陈版本，勾陈胜率稳定在90%以上。
+- 2018/11/16 勾陈版本，勾陈胜率达到96%。
 
-勾陈由 8组神经网络构成。
 
 ## Papers Related to the Deep Reinforcement Learning
 [1] [A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/abs/1708.05866)  
