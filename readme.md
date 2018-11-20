@@ -94,14 +94,6 @@ I will reproduce AlphagoZero in wargame.
 - 2018/11/16 The rate of Chen Chen wins 96%.
 
 
-- 2018/11/01 给出Resnet15Dense1 版本，该版本收敛性不好，但胜率能够达到85%.只能够找点适用
-- 2018/11/12 给出Resnet12Dense3 版本，该版本第一次出现收敛、稳定趋势，胜率达到92%
-- 2018/11/13 给出Resnet12Dense3-v2版本， 该版本收敛性非常稳定，胜率逐步上升。性能待观测
-- 2018/11/15 经过3天的训练，给出Wargame AI —— 勾陈版本，勾陈胜率稳定在90%以上。
-- 2018/11/16 勾陈版本，勾陈胜率达到96%。
-- 2018/11/20 勾陈胜率达到100。
-
-
 ## Papers Related to the Deep Reinforcement Learning
 [1] [A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/abs/1708.05866)  
 [2] [The Beta Policy for Continuous Control Reinforcement Learning](https://www.ri.cmu.edu/wp-content/uploads/2017/06/thesis-Chou.pdf)  
