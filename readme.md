@@ -30,8 +30,8 @@ Here I uploaded two DQN models, training Cartpole and mountaincar.
 
 This is very sparse for MountainCar-v0, it is 0 at the beginning, only when the top of the mountain is 1, there is a reward. This leads to the fact that if the sample to the top of the mountain is not taken during training, basically the train will not come out. So you can change the reward, for example, to change to the current position of the Car is positively related. Of course, there is a more advanced approach to inverse reinforcement learning (using GAN).
 
-![value_loss](DQN/DQN/pic/value_loss.jpg)   
-![step](DQN/DQN/pic/finish_episode.jpg) 
+![value_loss](Char1 DQN/DQN/pic/value_loss.jpg)   
+![step](Char1 DQN/DQN/pic/finish_episode.jpg) 
 This is value loss for DQN, We can see that the loss increaded to 1e13 however, the network work well. This is because the training is going on, the target_net and act_net are very different, so the calculated loss becomes very large. The previous loss was small because the reward was very sparse, resulting in a small update of the two networks.
 
 
@@ -93,6 +93,7 @@ I will reproduce AlphagoZero in wargame.
 - 2018/11/13 给出Resnet12Dense3-v2版本， 该版本收敛性非常稳定，胜率逐步上升。性能待观测
 - 2018/11/15 经过3天的训练，给出Wargame AI —— 勾陈版本，勾陈胜率稳定在90%以上。
 - 2018/11/16 勾陈版本，勾陈胜率达到96%。
+- 2018/11/20 勾陈胜率达到100。
 
 
 ## Papers Related to the Deep Reinforcement Learning
