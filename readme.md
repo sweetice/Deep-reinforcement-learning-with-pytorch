@@ -92,6 +92,7 @@ I will reproduce AlphagoZero in wargame.
 - 2018/11/13 The Resnet12Dense3-v2 version is given. This version is very stable and the winning rate is gradually increasing. Performance to be observed
 - 2018/11/15 After 3 days of training, Wargame AI is given - the version of Gou Chen, the hit rate is stable at over 90%.
 - 2018/11/16 The rate of Chen Chen wins 96%.
+- 2018/11/25 Gou Chen v2,v3 release
 
 
 ## Papers Related to the Deep Reinforcement Learning
