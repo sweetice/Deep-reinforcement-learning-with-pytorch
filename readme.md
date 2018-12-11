@@ -58,6 +58,8 @@ Thanks for [higgsfield](https://github.com/higgsfield)!!!
 
 ## Policy Gradient
 
+Thanks for [Luckysneed](https://github.com/luckysneed)'s [help](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char2%20Policy%20Gradient/REINFORCE_with_Baseline.py)!!!
+
 Use the following command to run a saved model
 
 
