@@ -36,8 +36,8 @@ class Net(nn.Module):
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
-        action_prob = self.fc2(x)
-        return action_prob
+        action_value = self.fc2(x)
+        return action_value
 
 class DQN():
 
