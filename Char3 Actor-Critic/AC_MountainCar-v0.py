@@ -1,4 +1,4 @@
-import gym
+import gym, os
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import count
@@ -13,9 +13,9 @@ from torch.nn.functional import  smooth_l1_loss
 
 #Hyperparameters
 LEARNING_RATE = 0.01
-GAMMA = 0.99
+GAMMA = 0.995
 NUM_EPISODES = 50000
-RENDER = True
+RENDER = False
 #env info
 env = gym.make('MountainCar-v0')
 env = env.unwrapped
@@ -32,19 +32,21 @@ saveAction = namedtuple('SavedActions',['probs', 'action_values'])
 class Module(nn.Module):
     def __init__(self):
         super(Module, self).__init__()
-        self.fc1 = nn.Linear(num_state, 64)
-        self.fc2 = nn.Linear(64, 32)
+        self.fc1 = nn.Linear(num_state, 128)
+        #self.fc2 = nn.Linear(64, 128)
 
-        self.action_head = nn.Linear(32, num_action)
-        self.value_head = nn.Linear(32, 1)
+        self.action_head = nn.Linear(128, num_action)
+        self.value_head = nn.Linear(128, 1)
         self.policy_action_value = []
         self.rewards = []
 
         self.gamma = GAMMA
+        os.makedirs('/AC_MountainCar-v0_Model/', exist_ok=True)
+
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
+        #x = F.relu(self.fc2(x))
 
         probs = F.softmax(self.action_head(x))
         value = self.value_head(x)
@@ -120,6 +122,7 @@ def main():
         for t in count():
             action = select_action(state)
             state , reward, done, _ = env.step(action)
+            reward = state[0] + reward
             if RENDER: env.render()
             policy.rewards.append(reward)
 
@@ -132,6 +135,7 @@ def main():
         plot(run_steps)
 
         if i_episode % 100 == 0 and i_episode !=0:
+
             modelPath = './AC_MountainCar-v0_Model/ModelTraing' + str(i_episode) + 'Times.pkl'
             torch.save(policy, modelPath)
 
