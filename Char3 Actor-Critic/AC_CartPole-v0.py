@@ -1,4 +1,4 @@
-import gym
+import gym, os
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import count
@@ -25,7 +25,7 @@ action_space = env.action_space.n
 learning_rate = 0.01
 gamma = 0.99
 episodes = 20000
-render = True
+render = False
 eps = np.finfo(np.float32).eps.item()
 SavedAction = namedtuple('SavedAction', ['log_prob', 'value'])
 
@@ -39,6 +39,7 @@ class Policy(nn.Module):
 
         self.save_actions = []
         self.rewards = []
+        os.makedirs('./AC_CartPole-v0', exist_ok=True)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
@@ -59,6 +60,7 @@ def plot(steps):
     ax.set_ylabel('Run Time')
     ax.plot(steps)
     RunTime = len(steps)
+
     path = './AC_CartPole-v0/' + 'RunTime' + str(RunTime) + '.jpg'
     if len(steps) % 200 == 0:
         plt.savefig(path)
