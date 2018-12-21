@@ -16,52 +16,41 @@ from torch.distributions import Normal, Categorical
 from torch.utils.data.sampler import BatchSampler, SubsetRandomSampler
 from tensorboardX import SummaryWriter
 
-
-
 # Parameters
-parser = argparse.ArgumentParser(description='Solve the Pendulum-v0 with PPO')
-parser.add_argument(
-    '--gamma', type=float, default=0.9, metavar='G', help='discount factor (default: 0.9)')
-parser.add_argument('--seed', type=int, default=0, metavar='N', help='random seed (default: 0)')
-parser.add_argument('--render', action='store_true', default=True, help='render the environment')
-parser.add_argument(
-    '--log-interval',
-    type=int,
-    default=10,
-    metavar='N',
-    help='interval between training status logs (default: 10)')
-args = parser.parse_args()
+env_name = 'MountainCar-v0'
+gamma = 0.99
+render = False
+seed = 1
+log_interval = 10
 
-env = gym.make('MountainCar-v0').unwrapped
+env = gym.make(env_name).unwrapped
 num_state = env.observation_space.shape[0]
 num_action = env.action_space.n
-torch.manual_seed(args.seed)
-env.seed(args.seed)
-
-Transition = namedtuple('Transition', ['state', 'action',  'a_log_prob', 'reward', 'next_state'])
-TrainingRecord = namedtuple('TrainingRecord', ['episode', 'reward'])
+torch.manual_seed(seed)
+env.seed(seed)
+Transition = namedtuple('Transition', ['state', 'action', 'a_log_prob', 'reward', 'next_state'])
 
 
 class Actor(nn.Module):
     def __init__(self):
         super(Actor, self).__init__()
-        self.fc1 = nn.Linear(num_state, 64)
-        self.action_head = nn.Linear(64, num_action)
+        self.fc1 = nn.Linear(num_state, 128)
+        self.action_head = nn.Linear(128, num_action)
 
     def forward(self, x):
-        x = F.leaky_relu(self.fc1(x))
-        action_prob = F.softmax(self.action_head(x), dim=-1)
+        x = F.relu(self.fc1(x))
+        action_prob = F.softmax(self.action_head(x), dim=1)
         return action_prob
 
 
 class Critic(nn.Module):
     def __init__(self):
         super(Critic, self).__init__()
-        self.fc1 = nn.Linear(num_state, 64)
-        self.state_value = nn.Linear(64, 1)
+        self.fc1 = nn.Linear(num_state, 128)
+        self.state_value = nn.Linear(128, 1)
 
     def forward(self, x):
-        x = F.leaky_relu(self.fc1(x))
+        x = F.relu(self.fc1(x))
         value = self.state_value(x)
         return value
 
@@ -69,21 +58,21 @@ class Critic(nn.Module):
 class PPO():
     clip_param = 0.2
     max_grad_norm = 0.5
-    ppo_epoch = 5
+    ppo_update_time = 10
     buffer_capacity = 8000
-    batch_size = 8
+    batch_size = 32
 
     def __init__(self):
         super(PPO, self).__init__()
-        self.actor_net = Actor().float()
-        self.critic_net = Critic().float()
-        self.buffer = [None] * self.buffer_capacity
+        self.actor_net = Actor()
+        self.critic_net = Critic()
+        self.buffer = []
         self.counter = 0
         self.training_step = 0
-        self.writer = SummaryWriter('runs/livetime')
+        self.writer = SummaryWriter('../exp')
 
         self.actor_optimizer = optim.Adam(self.actor_net.parameters(), 1e-3)
-        self.critic_net_optimizer = optim.Adam(self.critic_net.parameters(), 4e-3)
+        self.critic_net_optimizer = optim.Adam(self.critic_net.parameters(), 3e-3)
         if not os.path.exists('../param'):
             os.makedirs('../param/net_param')
             os.makedirs('../param/img')
@@ -94,9 +83,7 @@ class PPO():
             action_prob = self.actor_net(state)
         c = Categorical(action_prob)
         action = c.sample()
-        action_log_prob = c.log_prob(action)
-
-        return action.item(), action_log_prob.item()
+        return action.item(), action_prob[:, action.item()].item()
 
     def get_value(self, state):
         state = torch.from_numpy(state)
@@ -109,77 +96,81 @@ class PPO():
         torch.save(self.critic_net.state_dict(), '../param/net_param/critic_net' + str(time.time())[:10], +'.pkl')
 
     def store_transition(self, transition):
-        index = self.counter % self.buffer_capacity
-        self.buffer[index] = transition
+        self.buffer.append(transition)
         self.counter += 1
-        return self.counter >= self.buffer_capacity
 
-    def update(self):
-        print("The agent is updateing....")
-        if self.counter>=self.buffer_capacity:
-            self.training_step += 1
-            if self.training_step % 100 ==0:
-                print('The agent has trained {} times'.format(self.training_step))
-            state = torch.tensor([t.state for t in self.buffer], dtype=torch.float)
-            action = torch.tensor([t.action for t in self.buffer], dtype=torch.float).view(-1, 1)
-            reward = torch.tensor([t.reward for t in self.buffer], dtype=torch.float).view(-1, 1)
-            next_state = torch.tensor([t.next_state for t in self.buffer], dtype=torch.float)
-            old_action_log_prob = torch.tensor([t.a_log_prob for t in self.buffer], dtype=torch.float).view(-1, 1)
+    def update(self, i_ep):
+        state = torch.tensor([t.state for t in self.buffer], dtype=torch.float)
+        action = torch.tensor([t.action for t in self.buffer], dtype=torch.long).view(-1, 1)
+        reward = [t.reward for t in self.buffer]
+        # update: don't need next_state
+        # reward = torch.tensor([t.reward for t in self.buffer], dtype=torch.float).view(-1, 1)
+        # next_state = torch.tensor([t.next_state for t in self.buffer], dtype=torch.float)
+        old_action_log_prob = torch.tensor([t.a_log_prob for t in self.buffer], dtype=torch.float).view(-1, 1)
 
-            reward = (reward - reward.mean()) / (reward.std() + 1e-10)
-            with torch.no_grad():
-                target_v = reward + args.gamma * self.critic_net(next_state)
+        R = 0
+        Gt = []
+        for r in reward[::-1]:
+            R = r + gamma * R
+            Gt.insert(0, R)
+        Gt = torch.tensor(Gt, dtype=torch.float)
+        # print("The agent is updateing....")
+        for i in range(self.ppo_update_time):
+            for index in BatchSampler(SubsetRandomSampler(range(len(self.buffer))), self.batch_size, False):
+                if self.training_step % 1000 == 0:
+                    print('I_ep {} ，train {} times'.format(i_ep, self.training_step))
+                # with torch.no_grad():
+                Gt_index = Gt[index].view(-1, 1)
+                V = self.critic_net(state[index])
+                delta = Gt_index - V
+                advantage = delta.detach()
+                # epoch iteration, PPO core!!!
+                action_prob = self.actor_net(state[index]).gather(1, action[index])  # new policy
 
-            advantage = (target_v - self.critic_net(state)).detach()
-            for _ in range(self.ppo_epoch):  # iteration ppo_epoch
-                for index in BatchSampler(SubsetRandomSampler(range(self.buffer_capacity)), self.batch_size, True):
-                    # epoch iteration, PPO core!!!
-                    action_prob = self.actor_net(state[index])
-                    c = Categorical(action_prob)
-                    action_log_prob = c.log_prob(action[index])
-                    ratio = torch.exp(action_log_prob - old_action_log_prob[index])
+                ratio = (action_prob / old_action_log_prob[index])
+                surr1 = ratio * advantage
+                surr2 = torch.clamp(ratio, 1 - self.clip_param, 1 + self.clip_param) * advantage
 
-                    L1 = ratio * advantage[index]
-                    L2 = torch.clamp(ratio, 1 - self.clip_param, 1 + self.clip_param) * advantage[index]
-                    action_loss = -torch.min(L1, L2).mean()  # MAX->MIN desent
-                    self.actor_optimizer.zero_grad()
-                    action_loss.backward()
-                    nn.utils.clip_grad_norm_(self.actor_net.parameters(), self.max_grad_norm)
-                    self.actor_optimizer.step()
+                # update actor network
+                action_loss = -torch.min(surr1, surr2).mean()  # MAX->MIN desent
+                self.writer.add_scalar('loss/action_loss', action_loss, global_step=self.training_step)
+                self.actor_optimizer.zero_grad()
+                action_loss.backward()
+                nn.utils.clip_grad_norm_(self.actor_net.parameters(), self.max_grad_norm)
+                self.actor_optimizer.step()
 
-                    value_loss = F.smooth_l1_loss(self.critic_net(state[index]), target_v[index])
-                    self.critic_net_optimizer.zero_grad()
-                    value_loss.backward()
-                    nn.utils.clip_grad_norm_(self.critic_net.parameters(), self.max_grad_norm)
-                    self.critic_net_optimizer.step()
-            print("Update Finished....")
-        else:
-            print("Buffer is less than buff capasity! ")
+                # update critic network
+                value_loss = F.mse_loss(Gt_index, V)
+                self.writer.add_scalar('loss/value_loss', value_loss, global_step=self.training_step)
+                self.critic_net_optimizer.zero_grad()
+                value_loss.backward()
+                nn.utils.clip_grad_norm_(self.critic_net.parameters(), self.max_grad_norm)
+                self.critic_net_optimizer.step()
+                self.training_step += 1
+
+        del self.buffer[:]  # clear experience
+
 
 def main():
     agent = PPO()
-    running_step = []
     for i_epoch in range(1000):
-
         state = env.reset()
-        env.render()
+        if render: env.render()
 
         for t in count():
-            action, action_log_prob = agent.select_action(state)
-            next_state, reward, done, info = env.step(action)
-            trans = Transition(state, action, action_log_prob, reward, next_state)
-            env.render()
-            if agent.store_transition(trans):
-                if t % 2000 == 0:
-                    print(" Episode {} , the Car has run {} time ".format(i_epoch, t))
+            action, action_prob = agent.select_action(state)
+            next_state, reward, done, _ = env.step(action)
+            trans = Transition(state, action, action_prob, reward, next_state)
+            if render: env.render()
+            agent.store_transition(trans)
             state = next_state
+
             if done:
-                agent.update()
-                running_step.append(t)
-                agent.writer.add_scalar('liveTime/livestep', t, global_step=i_epoch)
+                if len(agent.buffer) >= agent.batch_size: agent.update(i_epoch)
+                agent.writer.add_scalar('Steptime/steptime', t, global_step=i_epoch)
                 break
-        if i_epoch % 50 == 0:
-            print("Episode {} , the step is {} ".format(i_epoch, running_step[i_epoch]))
+
 
 if __name__ == '__main__':
     main()
+    print("end")
