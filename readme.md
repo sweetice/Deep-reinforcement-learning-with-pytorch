@@ -132,10 +132,12 @@ I will reproduce AlphagoZero in wargame.
 [11] [Scalable trust-region method for deep reinforcement learning using Kronecker-factored approximation](https://arxiv.org/abs/1708.05144)  
 
 ## TO DO
-- DDPG
-- ACER
-- TRPO
-- DPPO
+- :white_check_mark: DDPG
+- :x: ACER
+- :x: TRPO
+- :x: SAC
+- :x: TD3
+
 
 # Best RL courses
 - David Silver's course [link](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)
