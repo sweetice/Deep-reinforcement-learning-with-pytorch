@@ -135,11 +135,11 @@ I will reproduce AlphagoZero in wargame.
 [14] [Addressing Function Approximation Error in Actor-Critic Methods](https://arxiv.org/abs/1802.09477)  
 
 ## TO DO
-- :white_check_mark: DDPG
-- :x: ACER
-- :x: TRPO
-- :x: SAC
-- :x: TD3
+- [x] DDPG
+- [ ] ACER
+- [ ] TRPO
+- [ ] SAC
+- [ ] TD3
 
 
 # Best RL courses
