@@ -1,6 +1,6 @@
-This repository will implement the classic deep reinforcement learning algorithms. The aim of this repository is to provide clear code for people to learn the deep reinforcement learning algorithm. 
+This repository will implement the classic and state-of-the-art deep reinforcement learning algorithms. The aim of this repository is to provide clear pytorch code for people to learn the deep reinforcement learning algorithm. 
 
-In the future, more algorithms will be added and the existing codes will also be maintained.
+In the future, more state-of-the-art algorithms will be added and the existing codes will also be maintained.
 
 ![demo](figures/demo.gif)  
 ## Requirements
@@ -18,27 +18,26 @@ plase go to official webisite to install it: https://pytorch.org/
 Recommend use Anaconda Virtual Environment to manage your packages
 
 ```
-2. install openai-baselines (**the openai-baselines update so quickly, please use the older version as blow, will solve in the future.**)
+2. install openai-baselines (**the openai-baselines update so quickly, please use the older version as blow, will solve in the future.**)(**Optional**)
 ```bash
 # clone the openai baselines
 git clone https://github.com/openai/baselines.git
 cd baselines
-git checkout 366f486
 pip install -e .
 
 ```
 
 ## DQN
 
-Here I uploaded two DQN models, training Cartpole and mountaincar.
+Here I uploaded two DQN models which is trianing CartPole-v0 and MountainCar-v0.
 
 ### Tips for MountainCar-v0
 
-This is very sparse for MountainCar-v0, it is 0 at the beginning, only when the top of the mountain is 1, there is a reward. This leads to the fact that if the sample to the top of the mountain is not taken during training, basically the train will not come out. So you can change the reward, for example, to change to the current position of the Car is positively related. Of course, there is a more advanced approach to inverse reinforcement learning (using GAN).
+This is a sparse binary reward task. Only when car reach the top of the mountain there is a none-zero reward. In genearal it may take 1e5 steps in stochastic policy. You can add a reward term, for example, to change to the current position of the Car is positively related. Of course, there is a more advanced approach that is inverse reinforcement learning.
 
 ![value_loss](Char1%20DQN/DQN/pic/value_loss.jpg)   
 ![step](Char1%20DQN/DQN/pic/finish_episode.jpg) 
-This is value loss for DQN, We can see that the loss increaded to 1e13 however, the network work well. This is because the training is going on, the target_net and act_net are very different, so the calculated loss becomes very large. The previous loss was small because the reward was very sparse, resulting in a small update of the two networks.
+This is value loss for DQN, We can see that the loss increaded to 1e13, however, the network work well. Because the target_net and act_net are very different with the training process going on. The calculated loss cumulate large. The previous loss was small because the reward was very sparse, resulting in a small update of the two networks.
 
 ### Papers Related to the DQN
 
@@ -54,11 +53,9 @@ This is value loss for DQN, We can see that the loss increaded to 1e13 however, 
   9. Hierarchical Deep Reinforcement Learning: Integrating Temporal Abstraction and Intrinsic Motivation  [[arxiv]](https://arxiv.org/abs/1604.06057) [[code]](https://github.com/higgsfield/RL-Adventure/blob/master/9.hierarchical%20dqn.ipynb)
   10. Neural Episodic Control [[arxiv]](https://arxiv.org/pdf/1703.01988.pdf) [[code]](#)
 
-Thanks for [higgsfield](https://github.com/higgsfield)!!!
 
 ## Policy Gradient
 
-Thanks for [Luckysneed](https://github.com/luckysneed)'s [help](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char2%20Policy%20Gradient/REINFORCE_with_Baseline.py)!!!
 
 Use the following command to run a saved model
 
@@ -72,7 +69,7 @@ Use the following command to train model
 
 
 ```
-pytorch_MountainCar-v0.py
+python pytorch_MountainCar-v0.py
 ```
 
 
@@ -86,9 +83,11 @@ This is a model that I have trained.
 
 This is an algorithmic framework, and the classic REINFORCE method is stored under Actor-Critic.
 
-## PPO
+## PPO  
 
-Proximal-Policy-Optimization
+- Original paper: https://arxiv.org/abs/1707.06347
+- Openai Baselines blog post: https://blog.openai.com/openai-baselines-ppo/
+
 
 ## A2C
 
@@ -103,19 +102,6 @@ The Asynchronous Advantage Actor Critic method (A3C) has been very influential s
 ## A3C
 
 Original paper: https://arxiv.org/abs/1602.01783
-
-## Alphago zero 
-
-I will reproduce AlphagoZero in wargame.
-
-### Timeline
-
-- 2018/11/01 gives the Resnet15Dense1 version, which has poor convergence, but the winning rate can reach 85%.
-- 2018/11/12 Gives the Resnet12Dense3 version, which is the first convergence and stable trend, with a winning percentage of 92%.
-- 2018/11/13 The Resnet12Dense3-v2 version is given. This version is very stable and the winning rate is gradually increasing. Performance to be observed
-- 2018/11/15 After 3 days of training, Wargame AI is given - the version of Gou Chen, the hit rate is stable at over 90%.
-- 2018/11/16 The rate of Chen Chen wins 96%.
-- 2018/11/25 Gou Chen v2,v3 release
 
 
 ## Papers Related to the Deep Reinforcement Learning
