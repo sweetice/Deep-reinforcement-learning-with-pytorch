@@ -1,3 +1,3 @@
 # More
 
-This folder records the content of advanced reinforcement learning.
+This folder give you more insights about RL.
