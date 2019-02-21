@@ -35,8 +35,8 @@ Here I uploaded two DQN models which is trianing CartPole-v0 and MountainCar-v0.
 
 This is a sparse binary reward task. Only when car reach the top of the mountain there is a none-zero reward. In genearal it may take 1e5 steps in stochastic policy. You can add a reward term, for example, to change to the current position of the Car is positively related. Of course, there is a more advanced approach that is inverse reinforcement learning.
 
-![value_loss](Char1%20DQN/DQN/pic/value_loss.jpg)   
-![step](Char1%20DQN/DQN/pic/finish_episode.jpg) 
+![value_loss](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char01%20DQN/DQN/pic/value_loss.jpg)   
+![step](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char01%20DQN/DQN/pic/finish_episode.jpg) 
 This is value loss for DQN, We can see that the loss increaded to 1e13, however, the network work well. Because the target_net and act_net are very different with the training process going on. The calculated loss cumulate large. The previous loss was small because the reward was very sparse, resulting in a small update of the two networks.
 
 ### Papers Related to the DQN
