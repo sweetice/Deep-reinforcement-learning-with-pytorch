@@ -122,9 +122,9 @@ Original paper: https://arxiv.org/abs/1602.01783
 
 ## TO DO
 - [x] DDPG
+- [ ] SAC
 - [ ] ACER
 - [ ] TRPO
-- [ ] SAC
 - [ ] TD3
 
 
