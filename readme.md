@@ -3,6 +3,7 @@ This repository will implement the classic and state-of-the-art deep reinforceme
 In the future, more state-of-the-art algorithms will be added and the existing codes will also be maintained.
 
 ![demo](figures/demo.gif)  
+[![Watch the video](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/figures/demo2.png)](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/figures/grid.mp4)
 ## Requirements
 
 - tensorflow 1.6
