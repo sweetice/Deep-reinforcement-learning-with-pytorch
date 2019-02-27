@@ -263,17 +263,17 @@ class SAC():
         torch.save(self.policy_net.state_dict(), './SAC_model/policy_net.pth')
         torch.save(self.value_net.state_dict(), './SAC_model/value_net.pth')
         torch.save(self.Q_net1.state_dict(), './SAC_model/Q_net1.pth')
-        torch.save(self.Q_net2.state_dict(), './SAC_model/Q_net1.pth')
+        torch.save(self.Q_net2.state_dict(), './SAC_model/Q_net2.pth')
         print("====================================")
         print("Model has been saved...")
         print("====================================")
 
     def load(self):
-        torch.load(self.policy_net.state_dict(), './SAC_model/policy_net.pth')
-        torch.load(self.value_net.state_dict(), './SAC_model/value_net.pth')
-        torch.load(self.Q_net1.state_dict(), './SAC_model/Q_net1.pth')
-        torch.load(self.Q_net2.state_dict(), './SAC_model/Q_net2.pth')
-        print()
+        self.policy_net.load_state_dict(torch.load('./SAC_model/policy_net.pth'))
+        self.value_net.load_state_dict(torch.load( './SAC_model/value_net.pth'))
+        self.Q_net1.load_state_dict(torch.load('./SAC_model/Q_net1.pth'))
+        self.Q_net2.load_state_dict(torch.load('./SAC_model/Q_net2.pth'))
+        print("model has been loaded")
 
 
 def main():
