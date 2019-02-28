@@ -132,9 +132,10 @@ Original paper: https://arxiv.org/abs/1602.01783
 ## TO DO
 - [x] DDPG
 - [x] SAC
+- [x] TD3
 - [ ] ACER
 - [ ] TRPO
-- [ ] TD3
+
 
 
 # Best RL courses
