@@ -1,4 +1,4 @@
-**This repo update so quickly, please make sure that what you clone is up to date. **
+**This repo update so quickly, please make sure that what you clone is up to date.**
 
 This repository will implement the classic and state-of-the-art deep reinforcement learning algorithms. The aim of this repository is to provide clear pytorch code for people to learn the deep reinforcement learning algorithm. 
 
