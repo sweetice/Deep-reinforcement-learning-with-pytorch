@@ -13,6 +13,12 @@ import torch.optim as optim
 from torch.distributions import Normal
 from tensorboardX import SummaryWriter
 
+'''
+Implementation of TD3 with pytorch 
+Original paper: https://arxiv.org/abs/1802.09477
+Not the author's implementation !
+'''
+
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 parser = argparse.ArgumentParser()
 
@@ -57,11 +63,6 @@ max_action = float(env.action_space.high[0])
 min_Val = torch.tensor(1e-7).float().to(device) # min value
 
 directory = './exp' + script_name + args.env_name +'./'
-'''
-Implementation of TD3 with pytorch 
-Original paper: https://arxiv.org/abs/1802.09477
-Not the author's implementation !
-'''
 
 class Replay_buffer():
     def __init__(self, capacity):
