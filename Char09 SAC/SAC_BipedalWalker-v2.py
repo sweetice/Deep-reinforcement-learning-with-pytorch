@@ -1,10 +1,10 @@
 import argparse
 from collections import namedtuple
 from itertools import count
+import pickle
 
-import os
+import os, random
 import numpy as np
-
 
 import gym
 import torch
@@ -31,9 +31,9 @@ parser.add_argument('--target_update_interval', default=1, type=int)
 parser.add_argument('--gradient_steps', default=1, type=int)
 
 
-parser.add_argument('--learning_rate', default=3e-4, type=int)
+parser.add_argument('--learning_rate', default=3e-4, type=float)
 parser.add_argument('--gamma', default=0.99, type=int) # discount gamma
-parser.add_argument('--capacity', default=10000, type=int) # replay buffer size
+parser.add_argument('--capacity', default=1000000, type=int) # replay buffer size
 parser.add_argument('--iteration', default=100000, type=int) #  num of  games
 parser.add_argument('--batch_size', default=128, type=int) # mini batch size
 parser.add_argument('--seed', default=1, type=int)
@@ -43,7 +43,7 @@ parser.add_argument('--num_hidden_layers', default=2, type=int)
 parser.add_argument('--num_hidden_units_per_layer', default=256, type=int)
 parser.add_argument('--sample_frequency', default=256, type=int)
 parser.add_argument('--activation', default='Relu', type=str)
-parser.add_argument('--render', default=True, type=bool) # show UI or not
+parser.add_argument('--render', default=False, type=bool) # show UI or not
 parser.add_argument('--log_interval', default=50, type=int) #
 parser.add_argument('--load', default=False, type=bool) # load model
 parser.add_argument('--render_interval', default=100, type=int) # after render_interval, the env.render() will work
@@ -80,15 +80,43 @@ state_dim = env.observation_space.shape[0]
 action_dim = env.action_space.shape[0]
 max_action = float(env.action_space.high[0])
 min_Val = torch.tensor(1e-7).float().to(device)
-Transition = namedtuple('Transition', ['s', 'a', 'r', 's_', 'd'])
+
+class Replay_buffer():
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.state_pool = torch.zeros(self.capacity, state_dim).float().to(device)
+        self.action_pool = torch.zeros(self.capacity, action_dim).float().to(device)
+        self.reward_pool = torch.zeros(self.capacity, 1).float().to(device)
+        self.next_state_pool = torch.zeros(self.capacity, state_dim).float().to(device)
+        self.done_pool = torch.zeros(self.capacity, 1).float().to(device)
+        self.num_transition = 0
+
+    def push(self, s, a, r, s_, d):
+        index = self.num_transition % self.capacity
+        s = torch.tensor(s).float().to(device)
+        a = torch.tensor(a).float().to(device)
+        r = torch.tensor(r).float().to(device)
+        s_ = torch.tensor(s_).float().to(device)
+        d = torch.tensor(d).float().to(device)
+        for pool, ele in zip([self.state_pool, self.action_pool, self.reward_pool, self.next_state_pool, self.done_pool],
+                           [s, a, r, s_, d]):
+            pool[index] = ele
+        self.num_transition += 1
+
+    def sample(self, batch_size):
+        index = np.random.choice(range(self.capacity), batch_size, replace=False)
+        bn_s, bn_a, bn_r, bn_s_, bn_d = self.state_pool[index], self.action_pool[index], self.reward_pool[index],\
+                                        self.next_state_pool[index], self.done_pool[index]
+
+        return bn_s, bn_a, bn_r, bn_s_, bn_d
 
 class Actor(nn.Module):
     def __init__(self, state_dim, action_dim=action_dim, min_log_std=-10, max_log_std=2):
         super(Actor, self).__init__()
         self.fc1 = nn.Linear(state_dim, 256)
-        self.fc2 = nn.Linear(256, 256)
-        self.mu_head = nn.Linear(256, action_dim)
-        self.log_std_head = nn.Linear(256, action_dim)
+        self.fc2 = nn.Linear(256, 512)
+        self.mu_head = nn.Linear(512, action_dim)
+        self.log_std_head = nn.Linear(512, action_dim)
         self.max_action = max_action
 
         self.min_log_std = min_log_std
@@ -149,7 +177,7 @@ class SAC():
         self.Q1_optimizer = optim.Adam(self.Q_net1.parameters(), lr=args.learning_rate)
         self.Q2_optimizer = optim.Adam(self.Q_net2.parameters(), lr=args.learning_rate)
 
-        self.replay_buffer = [Transition] * args.capacity
+        self.replay_buffer = Replay_buffer(args.capacity)
         self.num_transition = 0 # pointer of replay buffer
         self.num_training = 0
         self.writer = SummaryWriter('./exp-SAC_dual_Q_network')
@@ -172,12 +200,6 @@ class SAC():
         action = torch.tanh(z).detach().cpu().numpy()
         return action # return a scalar, float32
 
-    def store(self, s, a, r, s_, d):
-        index = self.num_transition % args.capacity
-        transition = Transition(s, a, r, s_, d)
-        self.replay_buffer[index] = transition
-        self.num_transition += 1
-
     def evaluate(self, state):
         batch_mu, batch_log_sigma = self.policy_net(state)
         batch_sigma = torch.exp(batch_log_sigma)
@@ -192,20 +214,9 @@ class SAC():
     def update(self):
         if self.num_training % 500 == 0:
             print("Training ... \t{} times ".format(self.num_training))
-        s = torch.tensor([t.s for t in self.replay_buffer]).float().to(device)
-        a = torch.tensor([t.a for t in self.replay_buffer]).to(device)
-        r = torch.tensor([t.r for t in self.replay_buffer]).to(device)
-        s_ = torch.tensor([t.s_ for t in self.replay_buffer]).float().to(device)
-        d = torch.tensor([t.d for t in self.replay_buffer]).float().to(device)
 
         for _ in range(args.gradient_steps):
-            #for index in BatchSampler(SubsetRandomSampler(range(args.capacity)), args.batch_size, False):
-            index = np.random.choice(range(args.capacity), args.batch_size, replace=False)
-            bn_s = s[index].reshape(-1, state_dim)
-            bn_a = a[index].reshape(-1, action_dim)
-            bn_r = r[index].reshape(-1, 1)
-            bn_s_ = s_[index].reshape(-1, state_dim)
-            bn_d = d[index].reshape(-1, 1)
+            bn_s, bn_a, bn_r, bn_s_, bn_d = self.replay_buffer.sample(args.batch_size)
 
             target_value = self.Target_value_net(bn_s_)
             next_q_value = bn_r + (1 - bn_d) * args.gamma * target_value
@@ -273,7 +284,10 @@ class SAC():
         self.value_net.load_state_dict(torch.load( './SAC_model/value_net.pth'))
         self.Q_net1.load_state_dict(torch.load('./SAC_model/Q_net1.pth'))
         self.Q_net2.load_state_dict(torch.load('./SAC_model/Q_net2.pth'))
-        print("model has been loaded")
+
+        print("====================================")
+        print("model has been loaded...")
+        print("====================================")
 
 
 def main():
@@ -291,7 +305,7 @@ def main():
             next_state, reward, done, info = env.step(np.float32(action))
             ep_r += reward
             if args.render and i >= args.render_interval : env.render()
-            agent.store(state, action, reward, next_state, done)
+            agent.replay_buffer.push(state, action, reward, next_state, done)
 
             if agent.num_transition >= args.capacity:
                 agent.update()
