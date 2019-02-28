@@ -43,11 +43,6 @@ parser.add_argument('--policy_delay', default=2, type=int)
 
 args = parser.parse_args()
 
-
-'''
-polyak, policy_noise, noise_clip, policy_delay
-'''
-
 # Set seeds
 # env.seed(args.seed)
 # torch.manual_seed(args.seed)
