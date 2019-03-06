@@ -22,7 +22,7 @@ parser.add_argument('--mode', default='train', type=str) # mode = 'train' or 'te
 parser.add_argument("--env_name", default="BipedalWalker-v2")
 parser.add_argument('--tau',  default=0.005, type=float) # target smoothing coefficient
 parser.add_argument('--target_update_interval', default=1, type=int)
-parser.add_argument('--iteration', default=5, type=int)
+parser.add_argument('--test_iteration', default=10, type=int)
 
 parser.add_argument('--learning_rate', default=3e-4, type=float)
 parser.add_argument('--gamma', default=0.99, type=int) # discounted factor
@@ -260,7 +260,7 @@ def main():
 
     if args.mode == 'test':
         agent.load()
-        for i in range(args.iteration):
+        for i in range(args.test_iteration):
             state = env.reset()
             for t in count():
                 action = agent.select_action(state)
@@ -269,8 +269,10 @@ def main():
                 env.render()
                 if done or t ==2000 :
                     print("Ep_i \t{}, the ep_r is \t{:0.2f}, the step is \t{}".format(i, ep_r, t))
+                    ep_r = 0
                     break
                 state = next_state
+
 
     elif args.mode == 'train':
         print("====================================")

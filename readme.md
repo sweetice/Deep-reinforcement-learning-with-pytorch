@@ -125,6 +125,12 @@ Episode reward in Pendulum-v0:
 Episode reward in BipedalWalker-v2:  
 ![ep_r](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char10%20TD3/Episode_reward_TD3_BipedakWalker.png)  
 
+If you want to use the test your model:
+
+```
+python TD3_BipedalWalker-v2.py --mode test
+```
+
 ## Papers Related to the Deep Reinforcement Learning
 [01] [A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/abs/1708.05866)  
 [02] [The Beta Policy for Continuous Control Reinforcement Learning](https://www.ri.cmu.edu/wp-content/uploads/2017/06/thesis-Chou.pdf)  
