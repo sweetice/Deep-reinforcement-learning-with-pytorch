@@ -108,10 +108,17 @@ Original paper: https://arxiv.org/abs/1602.01783
 
 ## SAC
 
-**This is not the author's implementation!!!**
+**This is not the implementation of the author of paper!!!**
+
+Episode reward in Pendulum-v0:
 
 ![ep_r](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char09%20SAC/SAC_ep_r_curve.png)
 
+## TD3
+
+**This is not the implementation of the author of paper!!!**  
+Episode reward in Pendulum-v0:  
+![ep_r](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char10%20TD3/TD3_Pendulum-v0.png)  
 
 ## Papers Related to the Deep Reinforcement Learning
 [01] [A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/abs/1708.05866)  
