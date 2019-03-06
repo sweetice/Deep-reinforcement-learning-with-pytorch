@@ -117,8 +117,13 @@ Episode reward in Pendulum-v0:
 ## TD3
 
 **This is not the implementation of the author of paper!!!**  
+
 Episode reward in Pendulum-v0:  
+
 ![ep_r](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char10%20TD3/TD3_Pendulum-v0.png)  
+
+Episode reward in BipedalWalker-v2:  
+![ep_r](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char10%20TD3/Episode_reward_TD3_BipedakWalker.png)  
 
 ## Papers Related to the Deep Reinforcement Learning
 [01] [A Brief Survey of Deep Reinforcement Learning](https://arxiv.org/abs/1708.05866)  
