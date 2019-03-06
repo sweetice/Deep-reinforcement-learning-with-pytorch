@@ -15,6 +15,13 @@ In the future, more state-of-the-art algorithms will be added and the existing c
 **Note that tensorflow do not support python3.7** 
 
 ## Installation
+
+```
+pip install -r requirements.txt
+```
+
+If you fail:  
+
 0. Install gym
 
 ```
