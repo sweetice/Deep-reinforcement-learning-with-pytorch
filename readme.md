@@ -8,20 +8,47 @@ In the future, more state-of-the-art algorithms will be added and the existing c
 
 ## Requirements
 
-- tensorflow >= 1.6
 - tensorboardX
 - gym >= 0.10
 - pytorch >= 0.4
 
 ## Installation
-1. install the pytorch
+0. Install gym
+
+```
+pip install gym
+```
+
+
+
+1. Install the pytorch
 ```bash
-plase go to official webisite to install it: https://pytorch.org/
+please go to official webisite to install it: https://pytorch.org/
 
 Recommend use Anaconda Virtual Environment to manage your packages
 
 ```
-2. install openai-baselines (**the openai-baselines update so quickly, please use the older version as blow, will solve in the future.**)(**Optional**)
+
+2. Install tensorboardX
+```bash
+pip install tensorboardX
+pip install tensorflow==1.12
+```
+
+3. Test 
+```
+cd Char10\ TD3/
+python TD3_BipedalWalker-v2.py --mode test
+```
+
+You could see a bipedalwalker if you install successfully.
+
+BipedalWalker: 
+
+![](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/figures/test.png)
+
+4. install openai-baselines (**the openai-baselines update so quickly, please use the older version as blow, will solve in the future.**)(**Optional**)
+
 ```bash
 # clone the openai baselines
 git clone https://github.com/openai/baselines.git
