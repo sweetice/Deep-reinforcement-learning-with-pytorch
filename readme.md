@@ -7,10 +7,12 @@ In the future, more state-of-the-art algorithms will be added and the existing c
 ![demo](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/figures/grid.gif)
 
 ## Requirements
-
+- python <=3.6 
 - tensorboardX
 - gym >= 0.10
 - pytorch >= 0.4
+
+**Note that tensorflow do not support python3.7** 
 
 ## Installation
 0. Install gym
