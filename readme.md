@@ -6,7 +6,7 @@ In the future, more state-of-the-art algorithms will be added and the existing c
 
 If you need me help you implement RL, you can send a email to me.
 
-My email addres is johnyhe1997 at foxmail dot com
+My email addres is johnyhe1997 at gmail dot com
 
 ![demo](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/figures/grid.gif)
 
@@ -191,9 +191,6 @@ python TD3_BipedalWalker-v2.py --mode test
 - [x] DDPG
 - [x] SAC
 - [x] TD3
-- [ ] ACER
-- [ ] TRPO
-
 
 
 # Best RL courses
@@ -201,4 +198,3 @@ python TD3_BipedalWalker-v2.py --mode test
 - Berkeley deep RL [link](http://rll.berkeley.edu/deeprlcourse/)
 - Practical RL [link](https://github.com/yandexdataschool/Practical_RL)
 - Deep Reinforcement Learning by Hung-yi Lee [link](https://www.youtube.com/playlist?list=PLJV_el3uVTsODxQFgzMzPLa16h6B8kWM_)  
-- RL by morvanzhou [link](https://morvanzhou.github.io/tutorials/machine-learning/reinforcement-learning/)
