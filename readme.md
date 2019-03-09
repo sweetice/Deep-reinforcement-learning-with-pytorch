@@ -129,7 +129,7 @@ This is an algorithmic framework, and the classic REINFORCE method is stored und
 ## DDPG  
 Episode reward in Pendulum-v0:  
 
-![ep_r]https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char05%20DDPG/DDPG_exp.jpg)  
+![ep_r](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char05%20DDPG/DDPG_exp.jpg)  
 
 
 ## PPO  
