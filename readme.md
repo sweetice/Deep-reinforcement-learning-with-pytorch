@@ -125,6 +125,12 @@ This is a model that I have trained.
 ## Actor-Critic
 
 This is an algorithmic framework, and the classic REINFORCE method is stored under Actor-Critic.
+ 
+## DDPG  
+Episode reward in Pendulum-v0:  
+
+![ep_r]https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/Char05%20DDPG/DDPG_exp.jpg)  
+
 
 ## PPO  
 
