@@ -204,4 +204,4 @@ python TD3_BipedalWalker-v2.py --mode test
 - [David Silver's course](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)  
 - [Berkeley deep RL](http://rll.berkeley.edu/deeprlcourse/)  
 - [Practical RL](https://github.com/yandexdataschool/Practical_RL)  
-- [Deep Reinforcement Learning by Hung-yi Lee](https://www.youtube.com/playlist? list=PLJV_el3uVTsODxQFgzMzPLa16h6B8kWM_)   
+- [Deep Reinforcement Learning by Hung-yi Lee](https://www.youtube.com/playlist?list=PLJV_el3uVTsODxQFgzMzPLa16h6B8kWM_)   
