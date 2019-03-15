@@ -16,7 +16,7 @@ My email addres is johnyhe1997 at gmail dot com
 - gym >= 0.10
 - pytorch >= 0.4
 
-**Note that tensorflow do not support python3.7** 
+**Note that tensorflow does not support python3.7** 
 
 ## Installation
 
