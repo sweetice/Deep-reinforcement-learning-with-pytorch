@@ -200,8 +200,8 @@ python TD3_BipedalWalker-v2.py --mode test
 
 
 # Best RL courses
-- OpenAI's spinning up [link](https://spinningup.openai.com/)  
-- David Silver's course [link](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)  
-- Berkeley deep RL [link](http://rll.berkeley.edu/deeprlcourse/)  
-- Practical RL [link](https://github.com/yandexdataschool/Practical_RL)  
-- Deep Reinforcement Learning by Hung-yi Lee [link](https://www.youtube.com/playlist? list=PLJV_el3uVTsODxQFgzMzPLa16h6B8kWM_)   
+- [OpenAI's spinning up](https://spinningup.openai.com/)  
+- [David Silver's course](http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html)  
+- [Berkeley deep RL](http://rll.berkeley.edu/deeprlcourse/)  
+- [Practical RL](https://github.com/yandexdataschool/Practical_RL)  
+- [Deep Reinforcement Learning by Hung-yi Lee](https://www.youtube.com/playlist? list=PLJV_el3uVTsODxQFgzMzPLa16h6B8kWM_)   
