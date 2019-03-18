@@ -24,12 +24,10 @@ Not the author's implementation !
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 parser = argparse.ArgumentParser()
 
-
 parser.add_argument("--env_name", default="BipedalWalker-v2")  # OpenAI gym environment name
 parser.add_argument('--tau',  default=0.005, type=float) # target smoothing coefficient
 parser.add_argument('--target_update_interval', default=1, type=int)
 parser.add_argument('--gradient_steps', default=1, type=int)
-
 
 parser.add_argument('--learning_rate', default=3e-4, type=float)
 parser.add_argument('--gamma', default=0.99, type=int) # discount gamma
@@ -284,7 +282,6 @@ class SAC():
         self.value_net.load_state_dict(torch.load( './SAC_model/value_net.pth'))
         self.Q_net1.load_state_dict(torch.load('./SAC_model/Q_net1.pth'))
         self.Q_net2.load_state_dict(torch.load('./SAC_model/Q_net2.pth'))
-
         print("====================================")
         print("model has been loaded...")
         print("====================================")
@@ -307,11 +304,10 @@ def main():
             if args.render and i >= args.render_interval : env.render()
             agent.replay_buffer.push(state, action, reward, next_state, done)
 
-            if agent.num_transition >= args.capacity:
-                agent.update()
-
             state = next_state
             if done:
+                if agent.replay_buffer.num_transition >= args.capacity:
+                    agent.update()
                 if i > 100:
                     print("Ep_i \t{}, the ep_r is \t{}, the step is \t{}".format(i, ep_r, t))
                 break
