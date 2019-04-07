@@ -240,10 +240,8 @@ def main():
                 ep_r += reward
                 if args.render and i >= args.render_interval : env.render()
                 agent.replay_buffer.push((state, next_state, action, reward, np.float(done)))
-                if i+1 % 10 == 0:
+                if (i+1) % 10 == 0:
                     print('Episode {},  The memory size is {} '.format(i, len(agent.replay_buffer.storage)))
-                if len(agent.replay_buffer.storage) >= args.capacity-1:
-                    agent.update()
 
                 state = next_state
                 if done or t >= args.max_episode:
@@ -255,6 +253,8 @@ def main():
 
             if i % args.log_interval == 0:
                 agent.save()
+        if len(agent.replay_buffer.storage) >= args.capacity-1:
+            agent.update()
 
     else:
         raise NameError("mode wrong!!!")
