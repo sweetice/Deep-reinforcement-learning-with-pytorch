@@ -28,10 +28,9 @@ parser.add_argument('--tau',  default=0.005, type=float) # target smoothing coef
 parser.add_argument('--target_update_interval', default=1, type=int)
 parser.add_argument('--test_iteration', default=10, type=int)
 
-parser.add_argument('--learning_rate', default=3e-3, type=float)
+parser.add_argument('--learning_rate', default=1e-3, type=float)
 parser.add_argument('--gamma', default=0.99, type=int) # discounted factor
-parser.add_argument('--capacity', default=10000, type=int) # replay buffer size
-parser.add_argument('--num_iteration', default=100000, type=int) #  num of  games
+parser.add_argument('--capacity', default=50000, type=int) # replay buffer size
 parser.add_argument('--batch_size', default=64, type=int) # mini batch size
 parser.add_argument('--seed', default=False, type=bool)
 parser.add_argument('--random_seed', default=9527, type=int)
@@ -43,14 +42,15 @@ parser.add_argument('--log_interval', default=50, type=int) #
 parser.add_argument('--load', default=False, type=bool) # load model
 parser.add_argument('--render_interval', default=100, type=int) # after render_interval, the env.render() will work
 parser.add_argument('--exploration_noise', default=0.1, type=float)
-parser.add_argument('--max_episode', default=2000, type=int)
+parser.add_argument('--max_episode', default=100000, type=int) # num of games
+parser.add_argument('--max_length_of_trajectory', default=2000, type=int) # num of games
 parser.add_argument('--print_log', default=5, type=int)
 parser.add_argument('--update_iteration', default=10, type=int)
 args = parser.parse_args()
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 script_name = os.path.basename(__file__)
-env = gym.make(args.env_name)
+env = gym.make(args.env_name).unwrapped
 
 if args.seed:
     env.seed(args.random_seed)
@@ -198,9 +198,9 @@ class DDPG(object):
     def save(self):
         torch.save(self.actor.state_dict(), directory + 'actor.pth')
         torch.save(self.critic.state_dict(), directory + 'critic.pth')
-        print("====================================")
-        print("Model has been saved...")
-        print("====================================")
+        # print("====================================")
+        # print("Model has been saved...")
+        # print("====================================")
 
     def load(self):
         self.actor.load_state_dict(torch.load(directory + 'actor.pth'))
@@ -221,7 +221,7 @@ def main():
                 next_state, reward, done, info = env.step(np.float32(action))
                 ep_r += reward
                 env.render()
-                if done or t >= args.max_episode:
+                if done or t >= args.max_length_of_trajectory:
                     print("Ep_i \t{}, the ep_r is \t{:0.2f}, the step is \t{}".format(i, ep_r, t))
                     ep_r = 0
                     break
@@ -232,19 +232,24 @@ def main():
         print("Collection Experience...")
         print("====================================")
         if args.load: agent.load()
-        for i in range(args.num_iteration):
+        for i in range(args.max_episode):
             state = env.reset()
-            for t in range(args.max_episode):
+            for t in count():
                 action = agent.select_action(state)
+
+                # issue 3 add noise to action
+                action = (action + np.random.normal(0, args.exploration_noise, size=env.action_space.shape[0])).clip(
+                    env.action_space.low, env.action_space.high)
+
                 next_state, reward, done, info = env.step(action)
                 ep_r += reward
                 if args.render and i >= args.render_interval : env.render()
                 agent.replay_buffer.push((state, next_state, action, reward, np.float(done)))
-                if (i+1) % 10 == 0:
-                    print('Episode {},  The memory size is {} '.format(i, len(agent.replay_buffer.storage)))
+                # if (i+1) % 10 == 0:
+                #     print('Episode {},  The memory size is {} '.format(i, len(agent.replay_buffer.storage)))
 
                 state = next_state
-                if done or t >= args.max_episode:
+                if done or t >= args.max_length_of_trajectory:
                     agent.writer.add_scalar('ep_r', ep_r, global_step=i)
                     if i % args.print_log == 0:
                         print("Ep_i \t{}, the ep_r is \t{:0.2f}, the step is \t{}".format(i, ep_r, t))
@@ -253,8 +258,8 @@ def main():
 
             if i % args.log_interval == 0:
                 agent.save()
-        if len(agent.replay_buffer.storage) >= args.capacity-1:
-            agent.update()
+            if len(agent.replay_buffer.storage) >= args.capacity-1:
+                agent.update()
 
     else:
         raise NameError("mode wrong!!!")
