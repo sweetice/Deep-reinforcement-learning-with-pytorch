@@ -4,10 +4,6 @@ This repository will implement the classic and state-of-the-art deep reinforceme
 
 In the future, more state-of-the-art algorithms will be added and the existing codes will also be maintained.
 
-If you need me help you implement RL, you can send a email to me.
-
-My email addres is johnyhe1997 at gmail dot com
-
 ![demo](https://github.com/sweetice/Deep-reinforcement-learning-with-pytorch/blob/master/figures/grid.gif)
 
 ## Requirements
@@ -26,7 +22,7 @@ pip install -r requirements.txt
 
 If you fail:  
 
-- 0. Install gym
+- Install gym
 
 ```
 pip install gym
@@ -34,7 +30,7 @@ pip install gym
 
 
 
-- 1. Install the pytorch
+- Install the pytorch
 ```bash
 please go to official webisite to install it: https://pytorch.org/
 
@@ -42,13 +38,13 @@ Recommend use Anaconda Virtual Environment to manage your packages
 
 ```
 
-- 2. Install tensorboardX
+- Install tensorboardX
 ```bash
 pip install tensorboardX
 pip install tensorflow==1.12
 ```
 
-- 3. Test 
+- Test 
 ```
 cd Char10\ TD3/
 python TD3_BipedalWalker-v2.py --mode test
