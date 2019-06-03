@@ -207,7 +207,7 @@ class TD3():
             self.critic_2_optimizer.step()
             self.writer.add_scalar('Loss/Q2_loss', loss_Q2, global_step=self.num_critic_update_iteration)
             # Delayed policy updates:
-            if num_iteration % args.policy_delay == 0:
+            if i % args.policy_delay == 0:
                 # Compute actor loss:
                 actor_loss = - self.critic_1(state, self.actor(state)).mean()
 
