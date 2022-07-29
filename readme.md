@@ -1,4 +1,7 @@
-**Status:** Active (under active development, breaking changes may occur)
+## Deep-reinforcement-learning-with-pytorch
+
+**Status:** 
+Active (under active development, breaking changes may occur)
 
 This repository will implement the classic and state-of-the-art deep reinforcement learning algorithms. The aim of this repository is to provide clear pytorch code for people to learn the deep reinforcement learning algorithm. 
 
